@@ -1,9 +1,12 @@
-import { Text, View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import React, { Component } from 'react'
-import * as Animatable from 'react-native-animatable'
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import Menu from '../menu';
 
 
 export default function Login() {
+  const navigation = useNavigation();
     return (
       <View style={styles.container}>
         <Animatable.View animation='fadeInLeft' delay={500} style={styles.containerHeader}>
@@ -23,11 +26,14 @@ export default function Login() {
             style={styles.input}
           />
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Menu')}>
             <Text style={styles.buttonText}>Acesssar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonRegister}>
+          <TouchableOpacity 
+            style={styles.buttonRegister}
+            onPress={() => navigation.navigate('Cadastro')}
+          >
             <Text style={styles.buttonRegisterText}>Não Possui uma conta?</Text>
           </TouchableOpacity>
         </Animatable.View>
