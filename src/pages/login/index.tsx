@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { authService } from '../../services/authService';
 
 // Defina o tipo de parâmetro para as rotas disponíveis na navegação
 type RootStackParamList = {
@@ -11,6 +12,22 @@ type RootStackParamList = {
 
 export default function Login() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+
+  const handleLogin = async () => {
+    console.log(username);
+    const success = await authService.login(username, password);
+    
+    if (success) {
+      Alert.alert('Login bem-sucedido!');
+      navigation.navigate('Menu')
+    } else {
+      Alert.alert('Falha no login', 'Nome de usuário ou senha incorretos.');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -22,23 +39,24 @@ export default function Login() {
         <Text style={styles.title}>Login</Text>
         <TextInput 
           placeholder='Digite seu login'
+          value={username}
+          onChangeText={setUsername}
           style={styles.input}
         />
 
         <Text style={styles.title}>Senha</Text>
         <TextInput 
           placeholder='Digite sua senha'
+          value={password}
+          onChangeText={setPassword}
           style={styles.input}
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Menu')}>
-          <Text style={styles.buttonText}>Acessar</Text>
-        </TouchableOpacity>
-
+        <Button title="Login" onPress={handleLogin} />
         <TouchableOpacity 
           style={styles.buttonRegister}
-          onPress={() => navigation.navigate('Cadastro')}
+          onPress={() => navigation.navigate('Cadastro')} 
         >
           <Text style={styles.buttonRegisterText}>Não possui uma conta?</Text>
         </TouchableOpacity>

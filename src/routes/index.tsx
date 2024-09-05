@@ -4,6 +4,7 @@ import Home from '../pages/home';
 import Login from '../pages/login';
 import Cadastro from '../pages/cadastro';
 import Menu from '../pages/menu';
+import Clientes from '../pages/clientes';
 
 // Defina o tipo de parâmetro para as rotas disponíveis na navegação
 type RootStackParamList = {
@@ -11,6 +12,7 @@ type RootStackParamList = {
   Login: undefined;
   Cadastro: undefined;
   Menu: undefined;
+  Clientes: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -36,6 +38,11 @@ export default function Routes() {
       <Stack.Screen
         name="Menu"
         component={Menu}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Clientes"
+        component={Clientes}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
