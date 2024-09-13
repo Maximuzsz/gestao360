@@ -1,68 +1,68 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import React from "react";
+import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { authService } from '../../services/authService';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 
+// Obtenção da altura da StatusBar
+const statusBarHeight = StatusBar.currentHeight ? StatusBar.currentHeight + 22 : 64;
 
 type RootStackParamList = {
-    Menu: undefined; // Se a tela não receber parâmetros, use 'undefined'
+  Home: undefined;
 };
 
-
 const Header: React.FC = () => {
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const handleLogout = () => {
-    // Implementar a lógica de logout aqui
-    console.log('Usuário saiu');
+  const handleExit = async () => {
+    await authService.logout;
+    navigation.navigate('Home')
   };
 
-  const goToMainMenu = () => {
-    // Navega para o menu principal
-    navigation.navigate('Menu');
-  };
 
   return (
     <View style={styles.container}>
-      
-      <TouchableOpacity onPress={goToMainMenu}>
-        <Text style={styles.title}>Gestão360</Text>
-      </TouchableOpacity>
+      <View style={styles.content}>
+        <Text style={styles.userName}>Gestão 360</Text>
 
-      <TouchableOpacity style={styles.iconButton} onPress={handleLogout}>
-        <Icon name="log-out-outline" size={24} color="#fff" />
-      </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.9} style={styles.bottonUser} onPress={handleExit}>
+          <Icon name="logout" size={27} color="#FFF" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
+export default Header;
+
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#38a69d',
+    paddingTop: statusBarHeight,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#3b5998', // Cor de fundo do header
-    
+    paddingStart: 16,
+    paddingEnd: 16,
+    paddingBottom: 24,
   },
-  title: {
-    fontSize: 20,
-    color: '#fff',
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  userName: {
+    fontSize: 18,
+    color: '#FFF',
     fontWeight: 'bold',
   },
-  button: {
-    padding: 8,
-    backgroundColor: '#ff5c5c', // Cor do botão de sair
-    borderRadius: 4,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  iconButton: { 
-    padding: 8,
+  bottonUser: {
+    width: 44,
+    height: 44,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 44 / 2,
   },
 });
-
-export default Header;

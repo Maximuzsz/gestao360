@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { TextInputMask } from 'react-native-masked-text';
 import { Cliente } from '../../../types/clientes';
 
 interface ClienteModalProps {
   visible: boolean;
   onClose: () => void;
   cliente: Cliente | null;
-  onSave: (cliente: Cliente) => void;
+  onSave: (id: string, cliente: Cliente) => void;
 }
 
 const ClienteModal: React.FC<ClienteModalProps> = ({ visible, onClose, cliente, onSave }) => {
+  const [id, setId] = useState<string>('');
   const [nome, setNome] = useState<string>('');
-  const [cpf, setCpf] = useState<string>('');
+  const [cpfCnpj, setCpfCnpj] = useState<string>('');
   const [telefone, setTelefone] = useState<string>('');
   const [endereco, setEndereco] = useState<string>('');
 
   useEffect(() => {
     if (cliente) {
+      setId(cliente.cliente_id || '');
       setNome(cliente.nome);
-      setCpf(cliente.cpf || '');
+      setCpfCnpj(cliente.cpf || '');
       setTelefone(cliente.telefone || '');
       setEndereco(cliente.endereco || '');
     } else {
       setNome('');
-      setCpf('');
+      setCpfCnpj('');
       setTelefone('');
       setEndereco('');
     }
@@ -37,13 +40,19 @@ const ClienteModal: React.FC<ClienteModalProps> = ({ visible, onClose, cliente, 
 
     const clienteData: Cliente = {
       nome,
-      cpf,
+      cpf: cpfCnpj,
       telefone,
       endereco,
       usuario_id: cliente?.usuario_id || '', // Para adicionar um novo cliente, o usuario_id será necessário
     };
 
-    onSave(clienteData);
+    onSave(cliente?.cliente_id || '', clienteData);
+  };
+
+  // Determine the mask based on the length of CPF/CNPJ
+  const getCpfCnpjMask = (value: string) => {
+    const cleanValue = value.replace(/\D/g, '');
+    return cleanValue.length <= 11 ? 'cpf' : 'cnpj';
   };
 
   return (
@@ -57,13 +66,18 @@ const ClienteModal: React.FC<ClienteModalProps> = ({ visible, onClose, cliente, 
             onChangeText={setNome}
             style={styles.input}
           />
-          <TextInput
-            placeholder="CPF"
-            value={cpf}
-            onChangeText={setCpf}
+          <TextInputMask
+            type={getCpfCnpjMask(cpfCnpj)}
+            placeholder="CPF/CNPJ"
+            value={cpfCnpj}
+            onChangeText={setCpfCnpj}
             style={styles.input}
           />
-          <TextInput
+          <TextInputMask
+            type={'custom'}
+            options={{
+              mask: '(99) 99999-9999',
+            }}
             placeholder="Telefone"
             value={telefone}
             onChangeText={setTelefone}
@@ -81,7 +95,6 @@ const ClienteModal: React.FC<ClienteModalProps> = ({ visible, onClose, cliente, 
           <TouchableOpacity style={styles.modalButtonCancelar} onPress={onClose} >
             <Text style={styles.modalButtonText}>Cancelar</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     </Modal>
