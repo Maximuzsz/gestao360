@@ -10,6 +10,7 @@ type RootStackParamList = {
     Clientes: undefined;
     Vendas: undefined;
     Produtos: undefined;
+    CaixaDiario: undefined;
 };
 
 const Menu = () => {
@@ -34,7 +35,7 @@ const Menu = () => {
             <Header name={usuario} />
             
             <View style={styles.menuContainer}>
-                <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Caixa')}>
+                <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('CaixaDiario')}>
                     <Icon name="cash-register" size={40} color="#000" />
                     <Text style={styles.menuText}>Controle de Caixa</Text>
                 </TouchableOpacity>
